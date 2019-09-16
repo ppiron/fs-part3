@@ -1,11 +1,11 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
+const cors = require('cors')
 
 const app = express()
+app.use(cors())
 app.use(bodyParser.json())
-// app.use(morgan('tiny'))
-
 morgan.token('body', function getBody(req) {
   const sentData = {
     name: req.body.name,
@@ -13,7 +13,6 @@ morgan.token('body', function getBody(req) {
   }
   return JSON.stringify(sentData)
 })
-
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 let persons = [
@@ -77,16 +76,17 @@ app.post('/api/persons', (req, res) => {
       error: 'number missing'
     })
   }
-  if (persons.find(person => {
+  const personSearch = persons.find(person => {
     return (person.name === newPerson.name)
-  }) !== undefined) {
+  })
+  if (personSearch !== undefined && personSearch.number === newPerson.number) {
     return res.status(400).json({
-      error: 'name already in the database'
+      error: 'name already added to the phonebook'
     })
   }
   newPerson.id = Math.floor(Math.random() * 1001)
   persons = persons.concat(newPerson)
-  res.json(persons)
+  res.json(newPerson)
 })
 
 app.delete('/api/persons/:id', (req, res) => {
