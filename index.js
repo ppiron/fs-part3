@@ -4,7 +4,7 @@ const morgan = require('morgan')
 const cors = require('cors')
 
 const app = express()
-app.use(cors())
+app.use(cors()) //added CORS support
 app.use(bodyParser.json())
 morgan.token('body', function getBody(req) {
   const sentData = {
