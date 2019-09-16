@@ -42,6 +42,15 @@ app.get('/api/persons', (req, res) => {
   res.json(persons)
 })
 
+app.get('/api/persons/:id', (req, res) => {
+  const person = persons.find(person => person.id === Number(req.params.id))
+  if (person !== undefined) {
+    res.json(person)
+  } else {
+    res.status(404).send('Not Found')
+  }
+
+})
 const PORT = 3001
 
 app.listen(PORT, () => {
