@@ -2,10 +2,11 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const cors = require('cors')
+const path = require('path')
 
 const app = express()
 app.use(cors()) //added CORS support
-app.use(express.static('build'))
+app.use(express.static(path.join(__dirname, 'build')))
 app.use(bodyParser.json())
 morgan.token('body', function getBody(req) {
   const sentData = {
