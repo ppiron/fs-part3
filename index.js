@@ -90,9 +90,15 @@ app.post('/api/persons', (req, res) => {
       error: 'name already added to the phonebook'
     })
   }
-  newPerson.id = Math.floor(Math.random() * 1001)
-  persons = persons.concat(newPerson)
-  res.json(newPerson)
+  const person = new Person({
+    name: req.body.name,
+    number: req.body.number
+  })
+  person.save().then(savedPerson => {
+    res.json(savedPerson)
+  })
+  // newPerson.id = Math.floor(Math.random() * 1001)
+  // persons = persons.concat(newPerson)
 })
 
 app.delete('/api/persons/:id', (req, res) => {
