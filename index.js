@@ -61,15 +61,6 @@ app.get('/api/persons', (req, res) => {
   })
 })
 
-// app.get('/api/persons/:id', (req, res) => {
-//   const person = persons.find(person => person.id === Number(req.params.id))
-//   if (person !== undefined) {
-//     res.json(person)
-//   } else {
-//     res.status(404).send('Not Found')
-//   }
-// })
-
 app.get('/api/persons/:id', (req, res, next) => {
   Person.findById(req.params.id).then(person => {
     if (person) {
@@ -111,16 +102,6 @@ app.post('/api/persons', (req, res) => {
   // newPerson.id = Math.floor(Math.random() * 1001)
   // persons = persons.concat(newPerson)
 })
-
-// app.delete('/api/persons/:id', (req, res) => {
-//   const person = persons.find(person => person.id === Number(req.params.id))
-//   if (person !== undefined) {
-//     persons = persons.filter(person => person.id !== Number(req.params.id))
-//     res.status(204).end()
-//   } else {
-//     res.status(404).send('Not Found')
-//   }
-// })
 
 app.delete('/api/persons/:id', (req, res, next) => {
   Person.findByIdAndDelete(req.params.id).then(result => {
