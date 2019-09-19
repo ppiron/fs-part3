@@ -57,17 +57,23 @@ app.get('/info', (req, res) => {
 
 app.get('/api/persons', (req, res) => {
   Person.find({}).then(persons => {
-    res.json(persons)
+    res.json(persons.map(person => person.toJSON()))
   })
 })
 
+// app.get('/api/persons/:id', (req, res) => {
+//   const person = persons.find(person => person.id === Number(req.params.id))
+//   if (person !== undefined) {
+//     res.json(person)
+//   } else {
+//     res.status(404).send('Not Found')
+//   }
+// })
+
 app.get('/api/persons/:id', (req, res) => {
-  const person = persons.find(person => person.id === Number(req.params.id))
-  if (person !== undefined) {
-    res.json(person)
-  } else {
-    res.status(404).send('Not Found')
-  }
+  Person.findById(req.params.id).then(person => {
+    res.json(person.toJSON())
+  })
 })
 
 app.post('/api/persons', (req, res) => {
@@ -95,7 +101,7 @@ app.post('/api/persons', (req, res) => {
     number: req.body.number
   })
   person.save().then(savedPerson => {
-    res.json(savedPerson)
+    res.json(savedPerson.toJSON())
   })
   // newPerson.id = Math.floor(Math.random() * 1001)
   // persons = persons.concat(newPerson)
