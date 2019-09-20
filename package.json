@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "watch": "nodemon index.js"
+    "watch": "nodemon index.js",
+    "build:fe": "Remove-Item -Recurse -Force .\\build; cd ..\\part2\\phonebook; npm run build; Copy-Item .\\build -Destination ..\\..\\part3 -Recurse"
   },
   "author": "PP",
   "license": "MIT",
