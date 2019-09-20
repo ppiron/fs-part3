@@ -19,28 +19,28 @@ morgan.token('body', function getBody(req) {
 })
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
-let persons = [
-  {
-    "name": "Ada Lovelace",
-    "number": "39-44-5323523",
-    "id": 2
-  },
-  {
-    "name": "Dan Abramov",
-    "number": "12-43-234345",
-    "id": 3
-  },
-  {
-    "name": "Mary Poppendieck",
-    "number": "39-23-6423122",
-    "id": 4
-  },
-  {
-    "name": "Arto Hellas",
-    "number": "23-24-2323232",
-    "id": 1
-  }
-]
+// let persons = [
+//   {
+//     "name": "Ada Lovelace",
+//     "number": "39-44-5323523",
+//     "id": 2
+//   },
+//   {
+//     "name": "Dan Abramov",
+//     "number": "12-43-234345",
+//     "id": 3
+//   },
+//   {
+//     "name": "Mary Poppendieck",
+//     "number": "39-23-6423122",
+//     "id": 4
+//   },
+//   {
+//     "name": "Arto Hellas",
+//     "number": "23-24-2323232",
+//     "id": 1
+//   }
+// ]
 
 app.get('/', (req, res) => {
   res.send('<h2>Ciao pippo</h2>')
@@ -74,7 +74,7 @@ app.get('/api/persons/:id', (req, res, next) => {
     .catch(error => next(error))
 })
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
   const newPerson = req.body
   if (newPerson.name === '') {
     return res.status(400).json({
@@ -86,14 +86,14 @@ app.post('/api/persons', (req, res) => {
       error: 'number missing'
     })
   }
-  const personSearch = persons.find(person => {
-    return (person.name === newPerson.name)
-  })
-  if (personSearch !== undefined && personSearch.number === newPerson.number) {
-    return res.status(400).json({
-      error: 'name already added to the phonebook'
-    })
-  }
+  // const personSearch = persons.find(person => {
+  //   return (person.name === newPerson.name)
+  // })
+  // if (personSearch !== undefined && personSearch.number === newPerson.number) {
+  //   return res.status(400).json({
+  //     error: 'name already added to the phonebook'
+  //   })
+  // }
   const person = new Person({
     name: req.body.name,
     number: req.body.number
@@ -101,6 +101,7 @@ app.post('/api/persons', (req, res) => {
   person.save().then(savedPerson => {
     res.json(savedPerson.toJSON())
   })
+    .catch(error => next(error))
   // newPerson.id = Math.floor(Math.random() * 1001)
   // persons = persons.concat(newPerson)
 })
@@ -129,6 +130,8 @@ const errorHandler = (error, req, res, next) => {
   console.error(error.message)
   if (error.name === 'CastError' && error.kind === 'ObjectId') {
     return res.status(400).send({ error: 'malformatted id' })
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
   }
   next(error)
 }
